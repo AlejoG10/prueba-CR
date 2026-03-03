@@ -66,6 +66,10 @@ export function VideoGrid({
   const displayVideos = isFirstPage
     ? reorderForLayout(videos, featuredVideoId)
     : videos;
+  const maxHypeLevel =
+    displayVideos.length > 0
+      ? Math.max(...displayVideos.map((v) => v.hypeLevel))
+      : 0;
 
   return (
     <div className="container mx-auto flex min-h-0 flex-1 flex-col py-6 px-4">
@@ -78,11 +82,11 @@ export function VideoGrid({
           {displayVideos.map((video) =>
             isFirstPage && video.id === featuredVideoId ? (
               <div key={video.id} className="col-span-2 row-span-2 min-h-0">
-                <VideoCard video={video} featured />
+                <VideoCard video={video} featured maxHypeLevel={maxHypeLevel} />
               </div>
             ) : (
               <div key={video.id} className="min-w-0 w-full">
-                <VideoCard video={video} />
+                <VideoCard video={video} maxHypeLevel={maxHypeLevel} />
               </div>
             ),
           )}

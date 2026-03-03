@@ -23,3 +23,11 @@ export function reorderForLayout(videos: VideosDataResponse[], featuredVideoId: 
 
     return [...others.slice(0, 2), featured, ...others.slice(2)];
 }
+
+export function getStarRating(hypeLevel: number, maxHypeLevel: number): number {
+    if (maxHypeLevel <= 0 || hypeLevel <= 0) {
+        return 0
+    } 
+    
+    return Math.min(5, Math.ceil((hypeLevel / maxHypeLevel) * 5))
+}
