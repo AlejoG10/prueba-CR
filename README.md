@@ -10,12 +10,13 @@
 
 ### Instrucciones
 
-1. Clonar el repositorio de manera local
-2. **Dentro** de cada carpeta (`cd backend / cd frontend`):
+1. Clonar el repositorio de manera local `git clone https://github.com/AlejoG10/prueba-CR.git`
+2. Viajar al repositorio `cd prueba-CR`
+3. **Dentro** de cada carpeta (`cd backend / cd frontend`):
 	- Instalar sus dependencias con `npm install`o `npm i`
 	- Correr el backend utilizando `npm run start:dev`
 	- Correr el frontend utilizando `npm run dev`
-3. Ir a http://localhost:3000/ para ver el resultado
+4. Ir a http://localhost:3000/ para ver el resultado
   
 
 ### Observaciones
