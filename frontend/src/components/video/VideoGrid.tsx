@@ -38,7 +38,7 @@ export function VideoGrid({
         <VideoAlert
           icon={AlertCircle}
           title="Error"
-          description={error.message}
+          description="Ocurrió un error al cargar los videos"
           variant="destructive"
           action={{ label: "Reintentar", onClick: () => refetch() }}
         />
