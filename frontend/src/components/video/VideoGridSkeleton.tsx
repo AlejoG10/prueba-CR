@@ -1,13 +1,12 @@
-import { Skeleton } from '@/components/ui/skeleton'
-import { Card, CardHeader } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Heading } from "@/components/shared/Heading";
 
 export function VideoGridSkeleton() {
   return (
     <div className="container mx-auto flex min-h-0 flex-1 flex-col py-6 px-4">
-      <h2 className="text-lg font-medium text-muted-foreground mb-6">
-        Cartelera de Hype Tecnológico
-      </h2>
+      <Heading />
 
       <Separator className="mb-6" />
 
@@ -34,5 +33,5 @@ export function VideoGridSkeleton() {
         <Skeleton className="h-9 w-9 rounded-md" />
       </div>
     </div>
-  )
+  );
 }

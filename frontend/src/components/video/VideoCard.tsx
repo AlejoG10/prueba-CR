@@ -30,7 +30,7 @@ export function VideoCard({ video, featured = false }: VideoCardProps) {
         />
         {featured && (
           <Badge className="absolute top-4 right-4 bg-rose-500 hover:bg-rose-600">
-            Top Hype
+            Top Video
           </Badge>
         )}
       </div>

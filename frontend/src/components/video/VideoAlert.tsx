@@ -23,10 +23,10 @@ export function VideoAlert({
   return (
     <section
       className={cn(
-        'flex min-h-screen w-full flex-col items-center justify-center px-8',
+        'flex min-h-[calc(100vh-16rem)] w-full flex-col items-center justify-center p-8 rounded-lg',
         variant === 'destructive'
-          ? 'bg-gradient-to-b from-red-50/70 via-red-50/40 to-red-50/60'
-          : 'bg-gradient-to-b from-slate-50/70 via-slate-50/40 to-slate-50/60',
+          ? 'bg-gradient-to-b from-red-50/60 via-red-50/30 to-red-50/50'
+          : 'bg-gradient-to-b from-slate-50/60 via-slate-50/30 to-slate-50/50',
       )}
     >
       <div className="flex max-w-md flex-col items-center gap-10 text-center">

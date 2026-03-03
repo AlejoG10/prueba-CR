@@ -1,42 +1,82 @@
-import { useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import type { VideosDataResponse } from '@/types/videos'
-import { reorderForLayout } from '@/lib/videos'
-import { VideoCard } from '@/components/VideoCard'
-import { Separator } from '@/components/ui/separator'
-import { Button } from '@/components/ui/button'
+import { AlertCircle, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 
-const FIRST_PAGE_SIZE = 9
-const PAGE_SIZE = 12
+import type { VideosDataResponse } from "@/types/videos";
+import { reorderForLayout } from "@/lib/videos";
+
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { VideoCard } from "@/components/video/VideoCard";
+import { VideoAlert } from "@/components/video/VideoAlert";
+import { Heading } from "@/components/shared/Heading";
 
 interface VideoGridProps {
-  videos: VideosDataResponse[]
-  featuredVideoId: string | null
+  videos: VideosDataResponse[];
+  error: Error | null;
+  featuredVideoId: string | null;
+  page: number;
+  totalPages: number;
+  setPage: (p: number | ((prev: number) => number)) => void;
+  refetch: () => void;
 }
 
-export function VideoGrid({ videos, featuredVideoId }: VideoGridProps) {
-  const [page, setPage] = useState(1)
-  const ordered = reorderForLayout(videos, featuredVideoId)
-  const totalPages =
-    ordered.length <= FIRST_PAGE_SIZE
-      ? 1
-      : 1 + Math.ceil((ordered.length - FIRST_PAGE_SIZE) / PAGE_SIZE)
-  const start = page === 1 ? 0 : FIRST_PAGE_SIZE + (page - 2) * PAGE_SIZE
-  const end = page === 1 ? FIRST_PAGE_SIZE : start + PAGE_SIZE
-  const paginated = ordered.slice(start, end)
+export function VideoGrid({
+  videos,
+  error,
+  featuredVideoId,
+  page,
+  totalPages,
+  setPage,
+  refetch,
+}: VideoGridProps) {
+  if (error) {
+    return (
+      <div className="container mx-auto flex min-h-0 flex-1 flex-col py-6 px-4">
+        <Heading />
+        
+        <Separator className="mb-6" />
+
+        <VideoAlert
+          icon={AlertCircle}
+          title="Error"
+          description={error.message}
+          variant="destructive"
+          action={{ label: "Reintentar", onClick: () => refetch() }}
+        />
+      </div>
+    );
+  }
+
+  if (!videos?.length) {
+    return (
+      <div className="container mx-auto flex min-h-0 flex-1 flex-col py-6 px-4">
+        <Heading />
+        
+        <Separator className="mb-6" />
+        
+        <VideoAlert
+          icon={Inbox}
+          title="Sin videos"
+          description="No hay videos disponibles"
+        />
+      </div>
+    );
+  }
+
+  const isFirstPage = page === 1;
+  const displayVideos = isFirstPage
+    ? reorderForLayout(videos, featuredVideoId)
+    : videos;
 
   return (
     <div className="container mx-auto flex min-h-0 flex-1 flex-col py-6 px-4">
-      <h2 className="text-lg font-medium text-muted-foreground mb-6">
-        Cartelera de Hype Tecnológico
-      </h2>
+      <Heading />
 
       <Separator className="mb-6" />
 
       <div className="flex flex-col">
         <div className="grid w-full grid-cols-2 gap-4 lg:grid-cols-4 grid-auto-rows-[auto]">
-          {paginated.map((video) =>
-            video.id === featuredVideoId ? (
+          {displayVideos.map((video) =>
+            isFirstPage && video.id === featuredVideoId ? (
               <div key={video.id} className="col-span-2 row-span-2 min-h-0">
                 <VideoCard video={video} featured />
               </div>
@@ -73,5 +113,5 @@ export function VideoGrid({ videos, featuredVideoId }: VideoGridProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

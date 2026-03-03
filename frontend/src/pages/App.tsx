@@ -7,7 +7,7 @@ export function App() {
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
 
-      <main className="flex h-full flex-1 justify-center items-center overflow-auto">
+      <main className="flex flex-1 justify-center items-center overflow-auto">
         <VideosPage />
       </main>
       

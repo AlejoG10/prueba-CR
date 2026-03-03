@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
-import videos from 'src/docs/mock-youtube-api.json';
+import videos from 'src/data/mock-youtube-api.json';
 import { VideosApiResponse, VideosDataResponse, VideosMockDataResponse, VideoStatistics } from 'src/types/videos';
 
 @Injectable()
@@ -10,8 +10,14 @@ export class VideosService {
     private DELAY_MIN = 500;
     private DELAY_MAX = 1500;
     private ERROR_PROB = 0.20;
+    private FIRST_PAGE_SIZE = 9;
+    private PAGE_SIZE = 12;
 
-    private addDelay(): Promise<void> {
+    // --------------------
+    // Simulation functions
+    // --------------------
+
+    private addRandomDelay(): Promise<void> {
         const delayMs = this.DELAY_MIN + Math.random() * (this.DELAY_MAX - this.DELAY_MIN);
 
         return new Promise((resolve) => setTimeout(resolve, delayMs));
@@ -25,7 +31,11 @@ export class VideosService {
             );
         }
     }
-    
+
+    // ----------------
+    // Helper functions
+    // ----------------
+
     private transformPublishedAt(publishedAt: string): string {
         let publishedAtRelative = "";
 
@@ -73,12 +83,28 @@ export class VideosService {
 
         return hypeLevel;
     }
+    private getPaginationData(dataLength: number, pageNum: number): { totalPages: number, startIdx: number, endIdx: number } {
+        const totalPages = dataLength <= this.FIRST_PAGE_SIZE
+            ? 1
+            : 1 + Math.ceil((dataLength - this.FIRST_PAGE_SIZE) / this.PAGE_SIZE);
 
-    async getVideos(): Promise<VideosApiResponse> {
-        await this.addDelay();
+        const startIdx = pageNum === 1 ? 0 : this.FIRST_PAGE_SIZE + (pageNum - 2) * this.PAGE_SIZE;
+        const endIdx = pageNum === 1 ? this.FIRST_PAGE_SIZE : startIdx + this.PAGE_SIZE;
+
+        return { totalPages, startIdx, endIdx };
+    }
+
+    // ---------------------
+    // Main service function
+    // ---------------------
+
+    async getVideosByPage(page: string): Promise<VideosApiResponse> {
+        await this.addRandomDelay();
         this.addRandomError();
 
-        const data: VideosDataResponse[] = this.mockVideos.items.map((item) => ({
+        const pageNum = Math.max(1, Number(page) || 1);
+
+        const allData: VideosDataResponse[] = this.mockVideos.items.map((item) => ({
             id: item.id,
             thumbnail: item.snippet.thumbnails.high.url,
             title: item.snippet.title,
@@ -87,6 +113,9 @@ export class VideosService {
             hypeLevel: this.calculateHypeLevel(item.snippet.title, item.statistics),
         }));
 
-        return { data, status: true, code: 200 };
+        const { totalPages, startIdx, endIdx } = this.getPaginationData(allData.length, pageNum);
+        const data = allData.slice(startIdx, endIdx);
+
+        return { data, totalPages };
     }
 }

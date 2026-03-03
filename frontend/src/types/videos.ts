@@ -9,6 +9,5 @@ export interface VideosDataResponse {
 
 export interface VideosApiResponse {
   data: VideosDataResponse[]
-  status: boolean
-  code: number
+  totalPages: number
 }

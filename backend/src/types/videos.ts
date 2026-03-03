@@ -1,7 +1,3 @@
-// ------------
-// Videos Types
-// ------------
-
 export interface VideoSnippet {
     title: string;
     channelTitle: string;
@@ -41,6 +37,5 @@ export interface VideosDataResponse {
 
 export interface VideosApiResponse {
     data: VideosDataResponse[];
-    status: boolean;
-    code: number;
+    totalPages: number;
 }
